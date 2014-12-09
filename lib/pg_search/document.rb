@@ -10,6 +10,11 @@ module PgSearch
     before_validation :update_content,
                       :unless => Proc.new { |doc| doc.searchable.nil? }
 
+    before_save do
+      self.user_id = self.searchable.try(:user_id)
+      self.organization_id = self.searchable.try(:organization_id)
+    end
+    
     # The logger might not have loaded yet.
     # https://github.com/Casecommons/pg_search/issues/26
     def self.logger
